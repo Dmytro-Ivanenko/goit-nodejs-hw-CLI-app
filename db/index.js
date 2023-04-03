@@ -4,6 +4,12 @@ const { nanoid } = require('nanoid');
 
 const contactsPath = path.join(__dirname, 'contacts.json');
 
+// work with file
+const rewriteFile = async (contArr) => {
+	await fs.writeFile(contactsPath, JSON.stringify(contArr, null, 2));
+};
+
+// contacts API
 const getAllContacts = async () => {
 	const data = await fs.readFile(contactsPath);
 	return JSON.parse(data);
@@ -26,7 +32,7 @@ const addContact = async (name, email, phone) => {
 	};
 
 	contacts.push(newContact);
-	await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+	await rewriteFile(contacts);
 	return newContact;
 };
 
@@ -42,7 +48,8 @@ const updateContact = async (id, data) => {
 
 	contacts[index] = { id, ...data };
 
-	await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+	await rewriteFile(contacts);
+
 	return contacts[index];
 };
 
@@ -58,7 +65,7 @@ const removeContact = async (id) => {
 
 	const [result] = contacts.splice(index, 1);
 
-	await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+	await rewriteFile(contacts);
 	return result;
 };
 
